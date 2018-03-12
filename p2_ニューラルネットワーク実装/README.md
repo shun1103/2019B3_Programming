@@ -165,7 +165,6 @@ $$ \frac{\partial L}{\partial W } = \frac{\partial L}{\partial U_3} \frac{\parti
 
 ### 例題：乗算ノード(×)の実装
 例題として、二つの変数の掛け算を行うノードを実装した`Multiply`クラスを実装してみます。
-![multiply](fig/Multiply.png)
 ```
 class Multiply():
     def __init__(self):

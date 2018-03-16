@@ -98,30 +98,30 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
       CNNでは画像の配列が入力となる。
       このため一次元の入力を
       `tf.reshape(, [バッチサイズ,画像の縦サイズ,画像の横サイズ,チャンネル数])`とすることでreshapeする。<br>
-      ```
-         x = tf.placeholder(tf.float32, [None, 784])
-         x_image = tf.reshape(x, [-1, 28, 28, 1])
-      ```
+   ```
+      x = tf.placeholder(tf.float32, [None, 784])
+      x_image = tf.reshape(x, [-1, 28, 28, 1])
+   ```
       
       
-      ```
-         W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
-         h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
-         h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
-      ```
+   ```
+      W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
+      h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
+      h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+   ```
 
-      ```
-         h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
-      ```
+   ```
+      h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
+   ```
 
-      ```
-         num_units1 = 14 * 14 * num_filters
-         num_units2 = 1024
-         w2 = tf.Variable(tf.truncated_normal([num_units1, num_units2]))
-         b2 = tf.Variable(tf.zeros([num_units2]))
-         w0 = tf.Variable(tf.zeros([num_units2, 10]))
-         b0 = tf.Variable(tf.zeros([10])) 
-      ```
+   ```
+      num_units1 = 14 * 14 * num_filters
+      num_units2 = 1024
+      w2 = tf.Variable(tf.truncated_normal([num_units1, num_units2]))
+      b2 = tf.Variable(tf.zeros([num_units2]))
+      w0 = tf.Variable(tf.zeros([num_units2, 10]))
+      b0 = tf.Variable(tf.zeros([10])) 
+   ```
 
    2. 順伝播計算の定義
       ```

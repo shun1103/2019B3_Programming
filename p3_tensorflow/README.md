@@ -82,36 +82,45 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
 
 ## 2. CNNの実装
    CNNを用いて画像分類を行う。<br>
-   CNNモデルの構成は,`入力--畳み込み✕n--プーリング層--畳み込み✕m--プーリング層--...--全結合層--出力`となる。<br>
+   CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--全結合層--出力`となる。<br>
    ここでの全結合層とは演習3-1で作成した多層パーセプトロンと同種のものです。<br>
    つまりCNNとは,畳込みとプーリングを行った結果を,多層パーセプトロンの入力とするモノのことなのです。<br>
+   具体的な処理は以下のようになります
    ```
    x = tf.placeholder(tf.float32, [None, 784])
    x_image = tf.reshape(x, [-1, 28, 28, 1])
-
+   ```
+   
+   ```
    W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
    h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
    h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+   ```
 
+   ```
    h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
-
+   ```
+   
+   ```
    num_units1 = 14 * 14 * num_filters
    num_units2 = 1024
-
    w2 = tf.Variable(tf.truncated_normal([num_units1, num_units2]))
    b2 = tf.Variable(tf.zeros([num_units2]))
-   hidden2 = tf.nn.relu(tf.matmul(h_pool_flat, w2) + b2)
-
    w0 = tf.Variable(tf.zeros([num_units2, 10]))
-   b0 = tf.Variable(tf.zeros([10]))
+   b0 = tf.Variable(tf.zeros([10])) 
+   ```
+   
+   ```
+   hidden2 = tf.nn.relu(tf.matmul(h_pool_flat, w2) + b2)
    p = tf.nn.softmax(tf.matmul(hidden2, w0) + b0)
-
    t = tf.placeholder(tf.float32, [None, 10])
    loss = -tf.reduce_sum(t * tf.log(p))
-   train_step = tf.train.AdamOptimizer(0.0005).minimize(loss)
+   train_step = tf.train.AdamOptimizer().minimize(loss)
    correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-
+   ```
+   
+   ```
    sess = tf.InteractiveSession()
    sess.run(tf.initialize_all_variables())
    saver = tf.train.Saver()

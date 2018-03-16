@@ -20,21 +20,21 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
 
 例)784次元の入力画像から10次元の出力を得る単層ニューラルネット
 1. 入力xと教師データt（外部入力による定数）,
-   重みwとバイアスb（変数）を定義。<br>
-   外部入力による定数はplaceholderで,<br>
-   変数はVariableで定義する。
+   重み`w`とバイアス`b`（変数）を定義。<br>
+   外部入力による定数は`placeholder`で,<br>
+   変数は`Variable`で定義する。
 ```
    x = tf.placeholder(tf.float32, [None, 784])
    t = tf.placeholder(tf.float32, [None, 10])
    w = tf.Variable(tf.zeros([784, 10]))
    b = tf.Variable(tf.zeros([10]))
 ```
-2. 出力yに至る計算過程を記述
+2. 出力`y`に至る計算過程を記述
 ```
    u = tf.matmul(x,w)+b
    y = tf.nn.softmax(u)
 ```
-3. 教師データtと出力yを用いて,誤差関数lossを定義（ここではログ交差エントロピーを使用）
+3. 教師データ`t`と出力`y`を用いて,誤差関数`loss`を定義（ここではログ交差エントロピーを使用）
 ```
    loss = -tf.reduce_sum(t * tf.log(y))
 ```
@@ -47,13 +47,13 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
    sess = tf.InteractiveSession()
    sess.run(tf.initialize_all_variables())
 ```
-6. 4のtrain_stepを何度も実行
+6. 4の`train_step`を何度も実行
 ```
    sess.run(train_step, feed_dict={x: 入力バッチ, t: 教師バッチ})
 ```
 注意点.<p> 
    tensorflowによって定義した変数を出力したい場合は下記のようにし,
-   sess.run()を実行しなくてはならない。ここでは,第1引数の値を求めるのに必要な外部入力を
+   `sess.run()`を実行しなくてはならない。ここでは,第1引数の値を求めるのに必要な外部入力を
    feed_dict={}によって示す。<br>
    下記の例で,wは外部入力がなくとも値を持つためfeeddictは不要<br>
    yを計算するには入力データが必要なため,feeddictを用いてxに実際の入力を入れる。

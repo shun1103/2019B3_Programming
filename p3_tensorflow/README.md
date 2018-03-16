@@ -98,55 +98,55 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
       CNNでは画像の配列が入力となる。
       このため一次元の入力を
       `tf.reshape(, [バッチサイズ,画像の縦サイズ,画像の横サイズ,チャンネル数])`とすることでreshapeする。<br>
-   ```
-      x = tf.placeholder(tf.float32, [None, 784])
-      x_image = tf.reshape(x, [-1, 28, 28, 1])
-   ```
-      
-      
-   ```
-      W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
-      h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
-      h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
-   ```
+```
+   x = tf.placeholder(tf.float32, [None, 784])
+   x_image = tf.reshape(x, [-1, 28, 28, 1])
+```
 
-   ```
-      h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
-   ```
 
-   ```
-      num_units1 = 14 * 14 * num_filters
-      num_units2 = 1024
-      w2 = tf.Variable(tf.truncated_normal([num_units1, num_units2]))
-      b2 = tf.Variable(tf.zeros([num_units2]))
-      w0 = tf.Variable(tf.zeros([num_units2, 10]))
-      b0 = tf.Variable(tf.zeros([10])) 
-   ```
+```
+   W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
+   h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
+   h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+```
+
+```
+   h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
+```
+
+```
+   num_units1 = 14 * 14 * num_filters
+   num_units2 = 1024
+   w2 = tf.Variable(tf.truncated_normal([num_units1, num_units2]))
+   b2 = tf.Variable(tf.zeros([num_units2]))
+   w0 = tf.Variable(tf.zeros([num_units2, 10]))
+   b0 = tf.Variable(tf.zeros([10])) 
+```
 
    2. 順伝播計算の定義
-      ```
-      hidden2 = tf.nn.relu(tf.matmul(h_pool_flat, w2) + b2)
-      p = tf.nn.softmax(tf.matmul(hidden2, w0) + b0)
-      t = tf.placeholder(tf.float32, [None, 10])
-      ```
+```
+   hidden2 = tf.nn.relu(tf.matmul(h_pool_flat, w2) + b2)
+   p = tf.nn.softmax(tf.matmul(hidden2, w0) + b0)
+   t = tf.placeholder(tf.float32, [None, 10])
+```
    3. 誤差関数の定義
-      ```
-      loss = -tf.reduce_sum(t * tf.log(p)) 
-      ```
+```
+   loss = -tf.reduce_sum(t * tf.log(p)) 
+```
    4. 最適化手法の定義
-      ```
-      train_step = tf.train.AdamOptimizer().minimize(loss)
-      ```
+```
+   train_step = tf.train.AdamOptimizer().minimize(loss)
+```
    5. セッションの定義（毎回同じ文言を書くだけ）
-      ```
-      sess = tf.InteractiveSession()
-      sess.run(tf.initialize_all_variables())
-      saver = tf.train.Saver()
-      ```
+```
+   sess = tf.InteractiveSession()
+   sess.run(tf.initialize_all_variables())
+   saver = tf.train.Saver()
+```
    6. 入力データを1へ入力し,4で定義した最適化手法を実行   
-      ```
-      train_step = tf.train.AdamOptimizer().minimize(loss)
-      correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
-      accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-      ```
+```
+   train_step = tf.train.AdamOptimizer().minimize(loss)
+   correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
+   accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+```
 

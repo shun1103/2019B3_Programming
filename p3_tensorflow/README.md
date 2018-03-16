@@ -54,9 +54,9 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
 注意点.<p> 
    tensorflowによって定義した変数を出力したい場合は下記のようにし,
    `sess.run()`を実行しなくてはならない。ここでは,第1引数の値を求めるのに必要な外部入力を
-   feed_dict={}によって示す。<br>
-   下記の例で,wは外部入力がなくとも値を持つためfeeddictは不要<br>
-   yを計算するには入力データが必要なため,feeddictを用いてxに実際の入力を入れる。
+   `feed_dict={}`によって示す。<br>
+   下記の例で,wは外部入力がなくとも値を持つため`feed_dict`は不要<br>
+   `y`を計算するには入力データが必要なため,`feed_dict`を用いて`x`に実際の入力を入れる。
 ```
    sess.run(w)
    sess.run(y, feed_dict={x: 入力バッチ})
@@ -72,7 +72,7 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
 - SGDの学習係数：0.0001
 
 ヒント.<p>
-   入力データに対する正答率を知りたいときは以下の式を（5.）より前に書きsess.run()で呼び出す。
+   入力データに対する正答率を知りたいときは以下の式を（5.）より前に書き`sess.run()`で呼び出す。
 ```
    correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))

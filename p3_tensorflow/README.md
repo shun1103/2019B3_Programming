@@ -97,18 +97,22 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
    CNNでは画像の配列が入力となる。
    このため一次元の入力を
    tf.reshape(, [バッチサイズ,画像の縦サイズ,画像の横サイズ,チャンネル数])とすることでreshapeする。
+
 ```
    x = tf.placeholder(tf.float32, [None, 784])
    x_image = tf.reshape(x, [-1, 28, 28, 1])
 ```
+
 ```
    W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
    h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
    h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 ```
+
 ```
    h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
 ```
+
 ```
    num_units1 = 14 * 14 * num_filters
    num_units2 = 1024

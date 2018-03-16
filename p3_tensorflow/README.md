@@ -97,10 +97,10 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
       多層パーセプトロンでは,入力が一次元だったのに対し,<br>
       CNNでは画像の配列が入力となる。
       このため一次元の入力を`tf.reshape(, [バッチサイズ,画像の縦サイズ,画像の横サイズ,チャンネル数])`とすることでreshapeする。
-   ```
-   x = tf.placeholder(tf.float32, [None, 784])
-   x_image = tf.reshape(x, [-1, 28, 28, 1])
-   ```
+      ```
+      x = tf.placeholder(tf.float32, [None, 784])
+      x_image = tf.reshape(x, [-1, 28, 28, 1])
+      ```
    ```
    W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
    h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')

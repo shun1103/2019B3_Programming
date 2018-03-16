@@ -103,6 +103,7 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
          x_image = tf.reshape(x, [-1, 28, 28, 1])
       ```
       
+      
       ```
          W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
          h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')

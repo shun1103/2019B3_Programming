@@ -94,7 +94,7 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
 6. 入力データを1へ入力し,4で定義した最適化手法を実行   
 
 例)784次元の入力画像から10次元の出力を得るCNN(畳み込みフィルタ1枚,プーリング1回)
-1-1. 多層パーセプトロンでは,入力が一次元だったのに対し,
+1.(a) 多層パーセプトロンでは,入力が一次元だったのに対し,
    CNNでは画像の配列が入力となる。
    このため一次元の入力を
    
@@ -105,13 +105,9 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
    x = tf.placeholder(tf.float32, [None, 784])
    x_image = tf.reshape(x, [-1, 28, 28, 1])
 ```
-1-2. 畳み込みフィルタを定義する
-```
-   W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
-```
-
 ```
    num_filters = 16
+   W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
    h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
 ```
 

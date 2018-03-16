@@ -41,6 +41,7 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
 ※  理論的には`loss = -tf.reduce_sum(t * tf.log(y))`で良いのだが<br>
    tensorflowにおいては誤差が小さくなりすぎると`loss=nan`となってしまい正しく学習されなくなる。<br>
    これを回避するために`tf.clip_by_value()`を使用する。
+   
 4. 最適化手法train_stepを定義
 ```
    train_step = tf.train.AdamOptimizer().minimize(loss)

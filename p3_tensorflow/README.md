@@ -121,18 +121,30 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
       b0 = tf.Variable(tf.zeros([10])) 
       ```
 
+   2. 順伝播計算の定義
       ```
       hidden2 = tf.nn.relu(tf.matmul(h_pool_flat, w2) + b2)
       p = tf.nn.softmax(tf.matmul(hidden2, w0) + b0)
       t = tf.placeholder(tf.float32, [None, 10])
-      loss = -tf.reduce_sum(t * tf.log(p))
-      train_step = tf.train.AdamOptimizer().minimize(loss)
-      correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
-      accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
       ```
-
+   3. 誤差関数の定義
+      ```
+      loss = -tf.reduce_sum(t * tf.log(p)) 
+      ```
+   4. 最適化手法の定義
+      ```
+      train_step = tf.train.AdamOptimizer().minimize(loss)
+      ```
+   5. セッションの定義（毎回同じ文言を書くだけ）
       ```
       sess = tf.InteractiveSession()
       sess.run(tf.initialize_all_variables())
       saver = tf.train.Saver()
       ```
+   6. 入力データを1へ入力し,4で定義した最適化手法を実行   
+      ```
+      train_step = tf.train.AdamOptimizer().minimize(loss)
+      correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
+      accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+      ```
+

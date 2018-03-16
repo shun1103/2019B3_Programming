@@ -34,7 +34,7 @@ p = tf.nn.softmax(tf.matmul(hidden2, w0) + b0)
 
 t = tf.placeholder(tf.float32, [None, 10])
 loss = -tf.reduce_sum(t * tf.log(tf.clip_by_value(p, 1e-10, 1.0)))
-train_step = tf.train.AdamOptimizer(0.0005).minimize(loss)
+train_step = tf.train.AdamOptimizer().minimize(loss)
 correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 

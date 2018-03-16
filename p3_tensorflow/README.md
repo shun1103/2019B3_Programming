@@ -94,7 +94,7 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
 6. 入力データを1へ入力し,4で定義した最適化手法を実行   
 
 例)784次元の入力画像から10次元の出力を得るCNN(畳み込みフィルタ1枚,プーリング1回)
-1.(a) 多層パーセプトロンでは,入力が一次元だったのに対し,
+1. 多層パーセプトロンでは,入力が一次元だったのに対し,
    CNNでは画像の配列が入力となる。
    このため一次元の入力を
    
@@ -102,16 +102,22 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
    とすることで画像配列に変形する。
 
 ```
+   #一次元の入力を画像配列に変形
    x = tf.placeholder(tf.float32, [None, 784])
    x_image = tf.reshape(x, [-1, 28, 28, 1])
 ```
 ```
+   #畳み込みフィルタを定義
    num_filters = 16
    W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
+```
+```
+   #畳み込み結果を一次元データに変形
    h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
 ```
-
+   *入力画像サイズが14*14になっているのは,下記のプーリングによって画像サイズが半分になるため。
 ```
+   #全結合層を定義
    num_units1 = 14 * 14 * num_filters
    num_units2 = 1024
    w2 = tf.Variable(tf.truncated_normal([num_units1, num_units2]))
@@ -122,8 +128,18 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
 
 2. 順伝播計算の定義
 ```
+   #畳み込み層
    h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
+```
+```   
+   #プーリング層(stride=[1,2,2,1]より画像サイズが半分になる)
+   #stride=[1（固定）,縦ストライド,横ストライド,1（固定）]
    h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+   
+```   
+   ※ストライドとはフィルタを何マスずつ移動させながら畳み込み,プーリングを行うかというもの。
+```   
+   #全結合層
    hidden2 = tf.nn.relu(tf.matmul(h_pool_flat, w2) + b2)
    p = tf.nn.softmax(tf.matmul(hidden2, w0) + b0)
    t = tf.placeholder(tf.float32, [None, 10])
@@ -144,8 +160,6 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
 ```
 6. 入力データを1へ入力し,4で定義した最適化手法を実行   
 ```
-   train_step = tf.train.AdamOptimizer().minimize(loss)
-   correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
-   accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+   sess.run(train_step, feed_dict={x: 入力バッチ, t: 教師バッチ})
 ```
 

@@ -62,7 +62,7 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
    sess.run(y, feed_dict={x: 入力バッチ})
 ```
 
-### 演習1-1. MNISTの分類
+### 演習3-1. MNISTの分類
 784-500-10のニューラルネットを学習してください。
 - バッチサイズ（学習時に使用するデータ数）：100
   - 学習に使用するデータは訓練データ60000枚から毎回ランダムに100枚選択
@@ -79,3 +79,37 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
 ```
    例題では中間層が無いニューラルネットの場合を考えた。<br>
    784-500-10のように中間層を追加するには順伝播計算の部分を書き換える。
+
+## 2. CNNの実装
+   CNNを用いて画像分類を行う。
+   ```
+   x = tf.placeholder(tf.float32, [None, 784])
+   x_image = tf.reshape(x, [-1, 28, 28, 1])
+
+   W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
+   h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
+   h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+
+   h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
+
+   num_units1 = 14 * 14 * num_filters
+   num_units2 = 1024
+
+   w2 = tf.Variable(tf.truncated_normal([num_units1, num_units2]))
+   b2 = tf.Variable(tf.zeros([num_units2]))
+   hidden2 = tf.nn.relu(tf.matmul(h_pool_flat, w2) + b2)
+
+   w0 = tf.Variable(tf.zeros([num_units2, 10]))
+   b0 = tf.Variable(tf.zeros([10]))
+   p = tf.nn.softmax(tf.matmul(hidden2, w0) + b0)
+
+   t = tf.placeholder(tf.float32, [None, 10])
+   loss = -tf.reduce_sum(t * tf.log(p))
+   train_step = tf.train.AdamOptimizer(0.0005).minimize(loss)
+   correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
+   accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+   sess = tf.InteractiveSession()
+   sess.run(tf.initialize_all_variables())
+   saver = tf.train.Saver()
+   ```

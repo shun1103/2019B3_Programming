@@ -106,10 +106,6 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
    num_filters = 16
    W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
 ```
-```
-   #畳み込み結果を一次元データに変形
-   h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
-```
    ※入力画像サイズが14✕14になっているのは下記のプーリングによって画像サイズが半分になるため。
 ```
    #全結合層を定義
@@ -133,6 +129,10 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
    
 ```   
    ※ストライドとはフィルタを何マスずつ移動させながら畳み込み,プーリングを行うかというもの。
+```
+   #畳み込み結果を一次元データに変形
+   h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
+```
 ```   
    #全結合層
    hidden2 = tf.nn.relu(tf.matmul(h_pool_flat, w2) + b2)

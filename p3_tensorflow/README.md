@@ -101,11 +101,11 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
       x = tf.placeholder(tf.float32, [None, 784])
       x_image = tf.reshape(x, [-1, 28, 28, 1])
       ```
-   ```
-   W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
-   h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
-   h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
-   ```
+      ```
+      W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
+      h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
+      h_pool = tf.nn.max_pool(h_conv, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+      ```
 
    ```
    h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])

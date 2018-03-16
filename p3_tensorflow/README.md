@@ -36,8 +36,11 @@ tensorflowを用いると順伝播計算を記述するだけで,誤差逆伝播
 ```
 3. 教師データ`t`と出力`y`を用いて,誤差関数`loss`を定義（ここではログ交差エントロピーを使用）
 ```
-   loss = -tf.reduce_sum(t * tf.log(y))
+   loss = -tf.reduce_sum(t * tf.log(tf.clip_by_value(y, 1e-10, 1.0)))
 ```
+※  理論的には`loss = -tf.reduce_sum(t * tf.log(y))`で良いのだが<br>
+   tensorflowにおいては誤差が小さくなりすぎると`loss=nan`となってしまい正しく学習されなくなる。<br>
+   これを回避するために`tf.clip_by_value()`を使用する。
 4. 最適化手法train_stepを定義
 ```
    train_step = tf.train.AdamOptimizer().minimize(loss)
@@ -141,7 +144,7 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
 ```
 3. 誤差関数の定義
 ```
-   loss = -tf.reduce_sum(t * tf.log(p)) 
+   loss = -tf.reduce_sum(t * tf.log(tf.clip_by_value(p, 1e-10, 1.0)))
 ```
 4. 最適化手法の定義
 ```

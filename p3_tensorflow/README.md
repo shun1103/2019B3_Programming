@@ -95,7 +95,7 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
 <br>
 1. 多層パーセプトロンでは,入力が一次元だったのに対し,<br>
    CNNでは画像の配列が入力となる。
-   このため一次元の入力を
+   このため一次元の入力を<br>
    `tf.reshape(入力, [バッチサイズ,画像の縦サイズ,画像の横サイズ,チャンネル数])`
    とすることで画像配列に変形する。
 
@@ -103,7 +103,7 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
    x = tf.placeholder(tf.float32, [None, 784])
    x_image = tf.reshape(x, [-1, 28, 28, 1])
 ```
-
+   畳み込みフィルタを定義する
 ```
    W_conv = tf.Variable(tf.truncated_normal([5, 5, 1, num_filters], stddev=0.1))
    h_conv = tf.nn.conv2d(x_image, W_conv, strides=[1, 1, 1, 1], padding='SAME')
@@ -111,6 +111,7 @@ CNNモデルの構成は,`入力--(畳み込み✕n--プーリング層)✕m--�
 ```
 
 ```
+   num_filters = 16
    h_pool_flat = tf.reshape(h_pool, [-1, 14 * 14 * num_filters])
 ```
 

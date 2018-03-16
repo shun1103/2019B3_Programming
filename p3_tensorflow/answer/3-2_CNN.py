@@ -33,7 +33,7 @@ b0 = tf.Variable(tf.zeros([10]))
 p = tf.nn.softmax(tf.matmul(hidden2, w0) + b0)
 
 t = tf.placeholder(tf.float32, [None, 10])
-loss = -tf.reduce_sum(t * tf.log(p))
+loss = -tf.reduce_sum(t * tf.log(tf.clip_by_value(p, 1e-10, 1.0)))
 train_step = tf.train.AdamOptimizer(0.0005).minimize(loss)
 correct_prediction = tf.equal(tf.argmax(p, 1), tf.argmax(t, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -43,7 +43,7 @@ sess.run(tf.initialize_all_variables())
 saver = tf.train.Saver()
 
 i = 0
-for _ in range(4000):
+for _ in range(20000):
     i += 1
     batch_xs, batch_ts = mnist.train.next_batch(100)
     sess.run(train_step, feed_dict={x: batch_xs, t: batch_ts})

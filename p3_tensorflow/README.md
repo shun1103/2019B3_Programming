@@ -313,7 +313,7 @@ maxlen = 25
 data = []
 target = []
 
-for i in range(0, length_of_sequences - maxlen + 1):
+for i in range(0, length_of_sequences - maxlen - 1):
   data.append(f[i: i + maxlen])
   target.append(f[i + maxlen])
 ```
@@ -344,7 +344,7 @@ n_out = len(Y[0])
 
 x = tf.placeholder(tf.float32, shape=[None, maxlen, n_in])
 t = tf.placeholder(tf.float32, shape=[None, n_out])
-n_batch = tf.placeholder(tf.int32)
+n_batch = tf.shape(x)[0]   # 修正：xのshapeから動的にバッチサイズを確保
 
 history = {
   'val_loss': []
@@ -399,13 +399,14 @@ for epoch in range(epochs):
     sess.run(train_step, feed_dict={
       x: X_[start:end],
       t: Y_[start:end],
-      n_batch: batch_size
-    })
+      # 修正：上の書き方だとエポックの最後でバッチサイズが10じゃなくなりエラーが起きる
+      # n_batch: batch_size
+    })
 
   val_loss = loss.eval(session=sess, feed_dict={
     x: X_validation,
     t: Y_validation,
-    n_batch: N_validation
+    # n_batch: N_validation
   })
   history['val_loss'].append(val_loss)
   print("epoch:", epoch, ' validation loss:', val_loss)

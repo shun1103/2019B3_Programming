@@ -11,4 +11,4 @@ def tf_idf(terms, docs):
             matrix[j][i] = tf(terms[i], docs[j]) * idf(terms[i], docs)
     return matrix
 
-print(tf_idf(terms, docs))
+#print(tf_idf(terms, docs))

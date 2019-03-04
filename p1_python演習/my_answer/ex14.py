@@ -8,8 +8,8 @@ def idf(term, docs):
     for doc in docs:
         if term in doc:
             bunbo += 1
-    
+
     return np.log10(bunshi / bunbo) + 1
 
-for x in terms:
-    print("tf(%s) = %f" % (x, idf(x, docs)))
+#for x in terms:
+#    print("idf(%s) = %f" % (x, idf(x, docs)))

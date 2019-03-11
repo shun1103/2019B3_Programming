@@ -15,10 +15,17 @@ and_gate = Perceptron(1, 1, 2)
 nand_gate = Perceptron(-1, -1, -1)
 or_gate = Perceptron(1, 1, 1)
 
-x1 = [1, 1, 0, 0]
-x2 = [1, 0, 1, 0]
+x1_list = [1, 1, 0, 0]
+x2_list = [1, 0, 1, 0]
 
 for i in range(len(x1)):
     print("AND({0}, {1}) = {2}\t".format(x1[i], x2[i], and_gate.forward(x1[i], x2[i])), end="")
     print("NAND({0}, {1}) = {2}\t".format(x1[i], x2[i], nand_gate.forward(x1[i], x2[i])), end="")
     print("OR({0}, {1}) = {2}\t".format(x1[i], x2[i], or_gate.forward(x1[i], x2[i])))
+
+def xor(x1, x2):
+    and_gate = Perceptron(1, 1, 2)
+    nand_gate = Perceptron(-1, -1, -1)
+    or_gate = Perceptron(1, 1, 1)
+
+    return and_gate.forward(nand_gate.forward(x1, x2), or_gate.forward(x1, x2))
